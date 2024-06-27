@@ -29,7 +29,7 @@ base {
 // Mojang ships Java 21 to end users starting in 1.20.5, so mods should target Java 21.
 java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 
-//minecraft.accessTransformers.file rootProject.file('src/main/resources/META-INF/accesstransformer.cfg')
+minecraft.accessTransformers.file rootProject.file('src/main/resources/META-INF/accesstransformer.cfg')
 //minecraft.accessTransformers.entry public net.minecraft.client.Minecraft textureManager # textureManager
 
 // Default run configurations.
@@ -145,7 +145,24 @@ tasks.withType(ProcessResources).configureEach {
         expand replaceProperties
     }
 }
-
+repositories {
+    maven {
+        url "https://www.cursemaven.com"
+        content {
+            includeGroup "curse.maven"
+        }
+    }
+    maven {
+        name = 'GeckoLib'
+        url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/'
+        content {
+            includeGroup("software.bernie.geckolib")
+        }
+    }
+    maven {
+        url "https://maven.firstdarkdev.xyz/snapshots"
+    }
+}
 // Example configuration to allow publishing using the maven-publish plugin
 publishing {
     publications {
@@ -158,6 +175,11 @@ publishing {
             url "file://${project.projectDir}/repo"
         }
     }
+}
+dependencies {
+    implementation("software.bernie.geckolib:geckolib-neoforge-${minecraft_version}:${geckolib_version}")
+    implementation("curse.maven:the-one-probe-245211:5431197")
+//    implementation("curse.maven:jei-238222:5466551")
 }
 
 tasks.withType(JavaCompile).configureEach {
